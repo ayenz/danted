@@ -54,4 +54,5 @@ else
     exit 1
 fi
 
+sudo sed -i 's/del_uer/del_user/g' /etc/init.d/sockd
 exit 0

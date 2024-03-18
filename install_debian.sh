@@ -19,6 +19,7 @@ BIN_PATH="/etc/danted/sbin/sockd"
 CONFIG_PATH="/etc/danted/sockd.conf"
 BIN_SCRIPT="/etc/init.d/sockd"
 
+MAIN_INTERFACE=$(ip link show | grep -E '^[0-9]+: [[:alnum:]]+:.*state UP' | grep -v "lo" | grep -v "docker" | grep -v "veth" | grep -v "br-" | awk -F ': ' '{print $2}')
 DEFAULT_IPADDR=$(ip addr | grep 'inet ' | grep -Ev 'inet 127|inet 192\.168' | \
             sed "s/[[:space:]]*inet \([0-9.]*\)\/.*/\1/")
 RUN_OPTS=$*
@@ -44,7 +45,7 @@ generate_config_ip(){
     cat <<EOF
 # Generate interface ${ipaddr}
 internal: ${ipaddr}  port = ${port}
-external: ${ipaddr}
+external: ${MAIN_INTERFACE}
 
 EOF
 }
